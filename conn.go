@@ -83,7 +83,7 @@ const (
 
 // ErrCloseSent is returned when the application writes a message to the
 // connection after sending a close message.
-//var ErrCloseSent = errors.New("websocket: close sent")
+var ErrCloseSent = errors.New("websocket: close sent")
 
 // ErrReadLimit is returned when reading a message that is larger than the
 // read limit set for the connection.
@@ -383,7 +383,7 @@ func (c *Conn) write(frameType int, deadline time.Time, buf0, buf1 []byte) error
 		return c.writeFatal(err)
 	}
 	if frameType == CloseMessage {
-		//c.writeFatal(ErrCloseSent)
+		c.writeFatal(ErrCloseSent)
 	}
 	return nil
 }
@@ -446,7 +446,7 @@ func (c *Conn) WriteControl(messageType int, data []byte, deadline time.Time) er
 		return c.writeFatal(err)
 	}
 	if messageType == CloseMessage {
-		//c.writeFatal(ErrCloseSent)
+		c.writeFatal(ErrCloseSent)
 	}
 	return err
 }
