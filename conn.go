@@ -594,14 +594,14 @@ func (w *messageWriter) flushFrame(final bool, extra []byte) error {
 	// documentation for more info.
 
 	if c.isWriting {
-		panic("concurrent write to websocket connection")
+		return w.endMessage(c.writeFatal(errors.New("concurrent write to websocket connection")))
 	}
 	c.isWriting = true
 
 	err := c.write(w.frameType, c.writeDeadline, c.writeBuf[framePos:w.pos], extra)
 
 	if !c.isWriting {
-		panic("concurrent write to websocket connection")
+		return w.endMessage(c.writeFatal(errors.New("concurrent write to websocket connection")))
 	}
 	c.isWriting = false
 
